@@ -7,3 +7,10 @@ function addition(array) {
     }, 0)
 }
 
+function subtraction(array) {
+    return array.reduce((total, num) => {
+        total -= num;
+        return total;
+    })
+}
+
