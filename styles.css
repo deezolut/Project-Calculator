@@ -1,0 +1,46 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
+#calculator {
+    border: 1px solid black;
+    height: 500px;
+    width: 320px;
+    margin-top: 100px;
+    border-radius: 5%;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-evenly;
+}
+
+#display {
+    border: 1px solid black;
+    margin: 15px 8px;
+    height: 70px;
+}
+
+#container-of-buttons {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.button {
+    border: 1px solid black;
+    width: 66px;
+    height: 66px;
+    border-radius: 5%;
+    margin: 0 2.5px 0 2.5px;
+
+}
+
+#btn17 {
+    margin-left: 8px;
+}
+
+#btn19 {
+    flex-grow: 1;
+    margin-right: 8px;
+}
