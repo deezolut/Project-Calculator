@@ -30,9 +30,10 @@ function divide(array) {
 };
 
 
-let num1
-let operator
-let num2
+let userNum1 
+let userOperator 
+let userNum2
+let displayValue 
 
 function operate(operator, num1, num2) {
     switch (operator) {
@@ -59,7 +60,7 @@ for (let i = 1; i < 20; i++) {
     button.setAttribute('id', `btn${i}`);
     button.classList.add('button');
     buttons.appendChild(button);
-}
+};
 
 for (let i = 1; i < 20; i++) {
     let button = document.querySelector(`#btn${i}`);
@@ -143,4 +144,23 @@ for (let i = 1; i < 20; i++) {
             button.style.color = 'white'
             break;
     }
-}
+};
+
+const getButtonClicked = document.querySelectorAll('.button');
+const display = document.querySelector('#display')
+
+getButtonClicked.forEach(button => {
+    button.addEventListener('click', e => {
+        display.textContent += e.target.textContent
+        switch (e.target.textContent) {
+            case 'AC':
+                display.textContent = '';
+                break;
+            case 'DEL':
+                let array = display.textContent.split('');
+                array.splice(-4, 4); // deletes last digit typed and prevents 'DEL' from being typed
+                display.textContent = array.join('');
+                break;
+        }
+    })
+})
