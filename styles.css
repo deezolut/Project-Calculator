@@ -1,6 +1,7 @@
 body {
     display: flex;
     justify-content: center;
+    background-color: #d86c70;
 }
 
 #calculator {
@@ -12,12 +13,15 @@ body {
     display: flex;
     flex-flow: column wrap;
     justify-content: space-evenly;
+    background-color: #d67d80;
 }
 
 #display {
     border: 1px solid black;
-    margin: 15px 8px;
-    height: 70px;
+    margin: 12px 10px;
+    height: 80px;
+    background-color: rgb(58, 53, 53);
+    border-radius: 3%;
 }
 
 #container-of-buttons {
@@ -28,12 +32,16 @@ body {
 }
 
 .button {
-    border: 1px solid black;
     width: 66px;
     height: 66px;
     border-radius: 5%;
     margin: 0 2.5px 0 2.5px;
-
+    border-radius: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
 }
 
 #btn17 {
