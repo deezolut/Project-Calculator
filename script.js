@@ -33,7 +33,6 @@ function divide(array) {
 let userNum1 
 let userOperator 
 let userNum2
-let displayValue 
 
 function operate(operator, num1, num2) {
     switch (operator) {
@@ -152,15 +151,32 @@ const display = document.querySelector('#display')
 getButtonClicked.forEach(button => {
     button.addEventListener('click', e => {
         display.textContent += e.target.textContent
+        let displayValue
         switch (e.target.textContent) {
             case 'AC':
+                displayValue = 0;
                 display.textContent = '';
                 break;
             case 'DEL':
-                let array = display.textContent.split('');
-                array.splice(-4, 4); // deletes last digit typed and prevents 'DEL' from being typed
-                display.textContent = array.join('');
+                let arrayForDelete = display.textContent.split('');
+                arrayForDelete.splice(-4, 4); // deletes last digit typed and prevents 'DEL' from being typed
+                display.textContent = arrayForDelete.join('');
+                break;
+            case '=':
+                let arrayForEqual = display.textContent.split('+');
+                userNum2 = parseFloat(arrayForEqual.pop());
+                displayValue = operate(userOperator, userNum1, userNum2);
+
+                userNum1 = 0;
+                userNum2 = 0;
+                display.textContent = displayValue;
+                break;
+            case '+':
+                userNum1 = parseFloat(display.textContent);
+                userOperator = ''; // removes any previous used operator
+                userOperator = '+';
                 break;
         }
+        log(displayValue)
     })
 })

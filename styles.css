@@ -1,5 +1,5 @@
 body {
-    background-color: #ab88d9;
+    background-color: #1c1c1c;
 }
 
 #calculator {
@@ -11,7 +11,7 @@ body {
     display: flex;
     flex-flow: column wrap;
     justify-content: space-evenly;
-    background-color: #735DA5;
+    background-color: #5e5e5efe;
 }
 
 #display {
@@ -54,4 +54,12 @@ body {
 #btn19 {
     flex-grow: 1;
     margin-right: 8px;
+}
+
+#btn4, #btn8, #btn12, #btn16, #btn19 { 
+    background-color: #ff9500;
+}
+
+#btn1, #btn2, #btn3 {
+    background-color: #d4d4d24e;
 }
