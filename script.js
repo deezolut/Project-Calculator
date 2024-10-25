@@ -35,7 +35,7 @@ function remainder(array) {
         total %= num;
         return total;
     });
-}
+};
 
 let userNum1 
 let userOperator 
@@ -54,6 +54,7 @@ function operate(operator, num1, num2) {
 
         case '/':
             return divide([num1, num2]);
+            
         case '%':
             return remainder([num1, num2]);
 
@@ -171,7 +172,7 @@ function clickButton(e) {
 
     if (display.textContent == '0' && e.target.textContent != '.') {
         display.textContent = '';
-    }    
+    };    
     display.textContent += e.target.textContent;
         
 
@@ -180,64 +181,228 @@ function clickButton(e) {
     switch (e.target.textContent) {
 
         case 'AC':
-            displayValue = 0;
+            displayValue = undefined;
             display.textContent = '0';
             userOperator = undefined;
             break;
 
         case 'DEL':
             let arrayForDelete = display.textContent.split('');
+            let arrayForDelete2 = display.textContent.split('');
+            if (isNaN(arrayForDelete2.splice(-4, 4)[0])) userOperator = undefined;
             arrayForDelete.splice(-4, 4); // deletes last digit typed and prevents 'DEL' from being typed
             display.textContent = arrayForDelete.join('');
             break;
 
         case '=':
-            let arrayForEqual = display.textContent.split('+');
-            log (arrayForEqual)
-            userNum2 = parseFloat(arrayForEqual.pop());
-            if (isNaN(userNum2) || userOperator == undefined) {
-                displayValue = 0
-            } 
-            else {
-                displayValue = operate(userOperator, userNum1, userNum2);
+            
+        
+
+            if (userOperator == undefined && displayValue == undefined) {
+                let arrayForEqual = display.textContent.split('');
+                arrayForEqual.splice(-1, 1);
+                display.textContent = arrayForEqual.join('');
+                displayValue = display.textContent;
+                return;
             }
+        
+            
+            if (userOperator != undefined) {
+                let arrayForNum2 = display.textContent.split('');
+                if (arrayForNum2.includes(`${userOperator}`)) {
+                    arrayForNum2.splice(-1, 1);
+                    return display.textContent = arrayForNum2.join('');
+                }
+                userNum2 = parseFloat(display.textContent);
+                displayValue = operate(userOperator, userNum1, userNum2);
+            };
+            
+            if (userOperator == '%' && isNaN(userNum2)
+                || userOperator == '/' && isNaN(userNum2)) { 
+                display.textContent = 'ERROR'
+                displayValue = undefined;
+                userOperator = undefined;
+                break;
+            }
+            if (isNaN(userNum2) || isNaN(userNum1)) displayValue = 0;
+            
+            displayValue % 1 == 0 ? display.textContent = displayValue : display.textContent = displayValue.toFixed(2);
+            
             userNum1 = 0;
             userNum2 = 0;
-            display.textContent = displayValue;
             break;
 
         case '+':
             if (userOperator != undefined) {
-                // to continue further calculation if wanted after first answer
-                let arrayForAddition = display.textContent.split('+');
-                userNum2 = parseFloat(arrayForAddition.splice(-2, 1));
+
+                // to allow operator at the start
+                if (isNaN(userNum1)) {
+                    let arr = display.textContent.split(`${userOperator}`);
+                    arr.splice(-2, 1);
+                    userNum1 = arr.join('');
+                }
+            }
+
+            if (displayValue == undefined && userNum1 != undefined && userNum2 != undefined) {
                 displayValue = operate(userOperator, userNum1, userNum2);
-                display.textContent = displayValue;
             }
 
-            if (displayValue != undefined) {
-                display.textContent += e.target.textContent
-            }
+            if (displayValue != undefined && !isNaN(userNum2)) {
+                displayValue % 1 == 0 ? display.textContent = `${displayValue}${userOperator}` : display.textContent = `${displayValue.toFixed(2)}${userOperator}`;
+            };
 
+           
+           
             userNum1 = parseFloat(display.textContent);
+           
 
-            
+        
             userOperator = '+';
+           
+
+            break;
+
+        case '-':
+            
+            if (userOperator != undefined) {
+
+                // to allow operator at the start
+                if (isNaN(userNum1)) {
+                    let arr = display.textContent.split(`${userOperator}`);
+                    arr.splice(-2, 1);
+                    userNum1 = arr.join('');
+                }
+            }
+
+            userOperator = '-';
+            if (displayValue == undefined && userNum1 != undefined && userNum2 != undefined) {
+                displayValue = operate(userOperator, userNum1, userNum2);
+            }
+            
+            if (displayValue != undefined && !isNaN(userNum2)) {
+                displayValue % 1 == 0 ? display.textContent = `${displayValue}${userOperator}` : display.textContent = `${displayValue.toFixed(2)}${userOperator}`;
+            };
+            userNum1 = parseFloat(display.textContent);
+            
+            
+
+            break;
+
+        case '%':
+
+          
+
+            if (userOperator != undefined) {
+
+                // to allow operator at the start
+                if (isNaN(userNum1)) {
+                    let arr = display.textContent.split(`${userOperator}`);
+                    arr.splice(-2, 1);
+                    userNum1 = arr.join('');
+                }
+            }
+
+            if (displayValue == undefined && userNum1 != undefined && userNum2 != undefined) {
+                displayValue = operate(userOperator, userNum1, userNum2);
+            }
+
+            if (displayValue != undefined && !isNaN(userNum2)) {
+                displayValue % 1 == 0 ? display.textContent = `${displayValue}${userOperator}` : display.textContent = `${displayValue.toFixed(2)}${userOperator}`;
+            };
+    
+            userNum1 = parseFloat(display.textContent);
+                
+            userOperator = '%';
+            break;
+
+        case '*':
+
+            if (userOperator != undefined) {
+
+                // to allow operator at the start
+                if (isNaN(userNum1)) {
+                    let arr = display.textContent.split(`${userOperator}`);
+                    arr.splice(-2, 1);
+                    userNum1 = arr.join('');
+                }
+            }
+
+            if (displayValue == undefined && userNum1 != undefined && userNum2 != undefined) {
+                displayValue = operate(userOperator, userNum1, userNum2);
+            }
+
+            if (displayValue != undefined && !isNaN(userNum2)) {
+                displayValue % 1 == 0 ? display.textContent = `${displayValue}${userOperator}` : display.textContent = `${displayValue.toFixed(2)}${userOperator}`;
+            };
+    
+            userNum1 = parseFloat(display.textContent);
+    
+                
+            userOperator = '*';
+            break;
+
+        case '/':
+
+            if (userOperator != undefined) {
+
+                // to allow operator at the start
+                if (isNaN(userNum1)) {
+                    let arr = display.textContent.split(`${userOperator}`);
+                    arr.splice(-2, 1);
+                    userNum1 = arr.join('');
+                }
+            }
+
+            if (displayValue == undefined && userNum1 != undefined && userNum2 != undefined) {
+                displayValue = operate(userOperator, userNum1, userNum2);
+            }
+
+            if (displayValue != undefined && !isNaN(userNum2)) {
+                displayValue % 1 == 0 ? display.textContent = `${displayValue}${userOperator}` : display.textContent = `${displayValue.toFixed(2)}${userOperator}`;
+            };
+    
+            userNum1 = parseFloat(display.textContent);
+    
+                
+            userOperator = '/';
+            break;
+
+        case '.':
+            let arrayForDot = display.textContent.split('');
+            let findIndex1 = arrayForDot.indexOf('.');
+            let findIndex2 = arrayForDot.lastIndexOf('.');
+
+
+            if (findIndex1 != findIndex2) {
+                arrayForDot.splice(-1, 1);
+                display.textContent = arrayForDot.join('');
+            };
             break;
             
         default:
+
             // erases the display text when typing a number after selecting an operator 
-            let array = display.textContent.split('');
-            if (array.includes('+')) {
-                display.textContent = array.pop();
+            let arrayForOperator = display.textContent.split('');
+            if (arrayForOperator.includes('E')) display.textContent = arrayForOperator.splice(1, 0)
+            if (arrayForOperator.includes('+')
+                || arrayForOperator.includes('-')
+                || arrayForOperator.includes('*')
+                || arrayForOperator.includes('%')
+                || arrayForOperator.includes('/')) {
+                display.textContent = arrayForOperator.pop();
+            };
+            
+            if (userNum1 != undefined) {
+                userNum2 = parseFloat(display.textContent)
             }
+            
+            
 
-            // case '%':
-            //     userNum1 = parseFloat(display.textContent);
-            //     userOperator = '%';
-            //     break;
-    }
+            
+    };
 
-    log(displayValue)
-    log(userOperator)
+    // log('display value: ' + displayValue);
+    // log('userOperator: ' + userOperator);
+    // log('usernum1: ' + userNum1)
+    // log('usernum2: ' + userNum2)
 }
