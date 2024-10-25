@@ -29,6 +29,12 @@ function divide(array) {
     });
 };
 
+function remainder(array) {
+    return array.reduce((total, num) => {
+        total %= num;
+        return total;
+    });
+}
 
 let userNum1 
 let userOperator 
@@ -47,6 +53,8 @@ function operate(operator, num1, num2) {
 
         case '/':
             return divide([num1, num2]);
+        case '%':
+            return remainder([num1, num2]);
 
     };
 };
@@ -150,18 +158,25 @@ const display = document.querySelector('#display')
 
 getButtonClicked.forEach(button => {
     button.addEventListener('click', e => {
-        display.textContent += e.target.textContent
+        
+        if (display.textContent == '0') display.textContent = '';    
+        display.textContent += e.target.textContent;
+        
+
         let displayValue
         switch (e.target.textContent) {
+
             case 'AC':
                 displayValue = 0;
-                display.textContent = '';
+                display.textContent = '0';
                 break;
+
             case 'DEL':
                 let arrayForDelete = display.textContent.split('');
                 arrayForDelete.splice(-4, 4); // deletes last digit typed and prevents 'DEL' from being typed
                 display.textContent = arrayForDelete.join('');
                 break;
+
             case '=':
                 let arrayForEqual = display.textContent.split('+');
                 userNum2 = parseFloat(arrayForEqual.pop());
@@ -171,12 +186,29 @@ getButtonClicked.forEach(button => {
                 userNum2 = 0;
                 display.textContent = displayValue;
                 break;
+
             case '+':
+                if (userOperator != undefined) {
+                    let arrayForAddition = display.textContent.split('+');
+                    userNum2 = parseFloat(arrayForAddition.splice(-2, 1));
+                    displayValue = operate(userOperator, userNum1, userNum2);
+                    display.textContent = displayValue;
+                }
+
+                if (displayValue != undefined) {
+                    display.textContent += e.target.textContent
+                }
+
                 userNum1 = parseFloat(display.textContent);
-                userOperator = ''; // removes any previous used operator
                 userOperator = '+';
                 break;
+
+            // case '%':
+            //     userNum1 = parseFloat(display.textContent);
+            //     userOperator = '%';
+            //     break;
         }
         log(displayValue)
+        log(userOperator)
     })
 })
