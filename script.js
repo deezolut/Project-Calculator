@@ -3,7 +3,8 @@ const table = console.table;
 
 function addition(array) {
     return array.reduce((total, num) => {
-        total += num;
+        // to avoid the js float errors like 0.2 + 0.1 = 0.300000004
+        total = (total * 10 + num * 10) / 10; 
         return total;
     }, 0);
 };
@@ -153,62 +154,90 @@ for (let i = 1; i < 20; i++) {
     }
 };
 
+
 const getButtonClicked = document.querySelectorAll('.button');
-const display = document.querySelector('#display')
+const display = document.querySelector('#display');
+
 
 getButtonClicked.forEach(button => {
-    button.addEventListener('click', e => {
+    button.addEventListener('click', clickButton);
+});
+
+function clickButton(e) {
+    // does not allow more than 15 digits
+    if (display.textContent.at(14)
+        && !isNaN(parseFloat(e.target.textContent))
+        && !isNaN(display.textContent.at(-1))) return;
+
+    if (display.textContent == '0' && e.target.textContent != '.') {
+        display.textContent = '';
+    }    
+    display.textContent += e.target.textContent;
         
-        if (display.textContent == '0') display.textContent = '';    
-        display.textContent += e.target.textContent;
-        
 
-        let displayValue
-        switch (e.target.textContent) {
+    let displayValue
+    
+    switch (e.target.textContent) {
 
-            case 'AC':
-                displayValue = 0;
-                display.textContent = '0';
-                break;
+        case 'AC':
+            displayValue = 0;
+            display.textContent = '0';
+            userOperator = undefined;
+            break;
 
-            case 'DEL':
-                let arrayForDelete = display.textContent.split('');
-                arrayForDelete.splice(-4, 4); // deletes last digit typed and prevents 'DEL' from being typed
-                display.textContent = arrayForDelete.join('');
-                break;
+        case 'DEL':
+            let arrayForDelete = display.textContent.split('');
+            arrayForDelete.splice(-4, 4); // deletes last digit typed and prevents 'DEL' from being typed
+            display.textContent = arrayForDelete.join('');
+            break;
 
-            case '=':
-                let arrayForEqual = display.textContent.split('+');
-                userNum2 = parseFloat(arrayForEqual.pop());
+        case '=':
+            let arrayForEqual = display.textContent.split('+');
+            log (arrayForEqual)
+            userNum2 = parseFloat(arrayForEqual.pop());
+            if (isNaN(userNum2) || userOperator == undefined) {
+                displayValue = 0
+            } 
+            else {
                 displayValue = operate(userOperator, userNum1, userNum2);
+            }
+            userNum1 = 0;
+            userNum2 = 0;
+            display.textContent = displayValue;
+            break;
 
-                userNum1 = 0;
-                userNum2 = 0;
+        case '+':
+            if (userOperator != undefined) {
+                // to continue further calculation if wanted after first answer
+                let arrayForAddition = display.textContent.split('+');
+                userNum2 = parseFloat(arrayForAddition.splice(-2, 1));
+                displayValue = operate(userOperator, userNum1, userNum2);
                 display.textContent = displayValue;
-                break;
+            }
 
-            case '+':
-                if (userOperator != undefined) {
-                    let arrayForAddition = display.textContent.split('+');
-                    userNum2 = parseFloat(arrayForAddition.splice(-2, 1));
-                    displayValue = operate(userOperator, userNum1, userNum2);
-                    display.textContent = displayValue;
-                }
+            if (displayValue != undefined) {
+                display.textContent += e.target.textContent
+            }
 
-                if (displayValue != undefined) {
-                    display.textContent += e.target.textContent
-                }
+            userNum1 = parseFloat(display.textContent);
 
-                userNum1 = parseFloat(display.textContent);
-                userOperator = '+';
-                break;
+            
+            userOperator = '+';
+            break;
+            
+        default:
+            // erases the display text when typing a number after selecting an operator 
+            let array = display.textContent.split('');
+            if (array.includes('+')) {
+                display.textContent = array.pop();
+            }
 
             // case '%':
             //     userNum1 = parseFloat(display.textContent);
             //     userOperator = '%';
             //     break;
-        }
-        log(displayValue)
-        log(userOperator)
-    })
-})
+    }
+
+    log(displayValue)
+    log(userOperator)
+}
